@@ -1,0 +1,27 @@
+Gerar um modelo e migração:
+
+	npx sequelize-cli model:generate --name [nome-tabela] --attributes firstName:string,lastName:string,email:string
+
+Rodar migrações:
+
+	npx sequelize-cli db:migrate
+
+Desfazer migração:
+	- Rodar o comando desfaz uma migração, rodar várias vezes irá desfazer em sequencia;
+	npx sequelize-cli db:migrate:undo
+
+Gerar seed:
+
+	npx sequelize-cli seed:generate --name [nome-seed]
+
+Rodar seeds:
+
+	npx sequelize-cli db:seed:all
+
+Desfazer último seed:
+
+	npx sequelize db:seed:undo
+
+Desfazer seed específico:
+
+	npx sequelize-cli db:seed:undo --seed nome-do-arquivo
