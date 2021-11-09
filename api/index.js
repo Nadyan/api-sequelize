@@ -1,15 +1,11 @@
 const express = require('express');
-const bodyparser = require('body-parser');
+const routes = require('./routes');
 
 const app = express();
-
-app.use(bodyparser.json());
-
-app.get('/teste', (req, res) => {
-    res.status(200).send({mensagem: 'Hellaaaaw daawwwg!'});
-});
-
 const port = 3000;
+
+routes(app);
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`)
 });
