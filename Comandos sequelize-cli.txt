@@ -1,6 +1,42 @@
-Gerar um modelo e migração:
+CRIAÇÃO DE TABELAS:
+	- Gerar um modelo e migração:
 
-	npx sequelize-cli model:generate --name [nome-tabela] --attributes firstName:string,lastName:string,email:string
+		Primeiro criamos as tabelas sem as chaves estrangeiras, apenas com os atributos da própria tabela.
+
+		npx sequelize-cli model:generate --name [nome-tabela] --attributes [attr1:tipo, attr2:tipo]
+		ou
+		npx sequelize-cli model:create --name [nome-tabela] --attributes [attr1:tipo, attr2:tipo]
+
+		Ex:
+			npx sequelize-cli model:create --name Pessoas --attributes nome:string,ativo:boolean,email:string,role:string
+			npx sequelize-cli model:create --name Niveis --attributes descr_nivel:string
+			npx sequelize-cli model:create --name Turmas --attributes data_inicio:dateonly
+			npx sequelize-cli model:create --name Matriculas --attributes status:string
+
+	- Inserir atributos como chave estrangeira:
+
+		Essas associações são feitas nos modelos, no método static associate(models):
+		
+		Ex: 
+			Tabela_A.hasMany(Tabela_B, nome_fk) -> Um para muitos entre A e B.
+			- Chave estrangeira definida em B.
+			- Definir em B o seguinte: B.belongsTo(A) para complementar o hasMany.
+
+			Equipe.hasMany(Atleta);
+			Atleta.belongsTo(Equipe);
+
+		Também precisamos adicionar nas migrações as FK:
+
+			Na Migração de turmas, adicionamos:
+
+			docente_id: {
+        		allowNull: false,
+        		type: Sequelize.INTEGER,
+        		references: { model: 'Pessoas', key: 'id' }
+      		}
+
+			Pois na tabela Turmas temos uma FK da tabela Pessoas, e etc.
+			Feito isso, rodamos: npx sequelize-cli db:migrate
 
 Rodar migrações:
 
