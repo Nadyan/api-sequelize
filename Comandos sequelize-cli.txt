@@ -2,6 +2,8 @@ CRIAÇÃO DE TABELAS:
 	- Gerar um modelo e migração:
 
 		Primeiro criamos as tabelas sem as chaves estrangeiras, apenas com os atributos da própria tabela.
+		Depois, criamos as tabelas com chave estrangeira de tabelas que ja foram criadas. Nunca podemos
+		criar tabelas com chaves estrangeiras de tabelas que ainda nao existem.
 
 		npx sequelize-cli model:generate --name [nome-tabela] --attributes [attr1:tipo, attr2:tipo]
 		ou
@@ -38,26 +40,35 @@ CRIAÇÃO DE TABELAS:
 			Pois na tabela Turmas temos uma FK da tabela Pessoas, e etc.
 			Feito isso, rodamos: npx sequelize-cli db:migrate
 
-Rodar migrações:
+MIGRAÇÕES:
 
-	npx sequelize-cli db:migrate
+	Rodar migrações:
 
-Desfazer migração:
-	- Rodar o comando desfaz uma migração, rodar várias vezes irá desfazer em sequencia;
-	npx sequelize-cli db:migrate:undo
+		npx sequelize-cli db:migrate
 
-Gerar seed:
+	Desfazer migração:
+		- Rodar o comando desfaz uma migração, rodar várias vezes irá desfazer em sequencia;
+		npx sequelize-cli db:migrate:undo
 
-	npx sequelize-cli seed:generate --name [nome-seed]
 
-Rodar seeds:
+POPULAÇÃO DE TABELAS:
 
-	npx sequelize-cli db:seed:all
+	Gerar seed:
 
-Desfazer último seed:
+		npx sequelize-cli seed:generate --name [nome-seed]
 
-	npx sequelize db:seed:undo
+		Obs: Os seeds devem ser criados na mesma ordem
+			 em que foram criadas as tabelas, por conta 
+			 das chaves estrangeiras.
 
-Desfazer seed específico:
+	Rodar seeds:
 
-	npx sequelize-cli db:seed:undo --seed nome-do-arquivo
+		npx sequelize-cli db:seed:all
+
+	Desfazer último seed:
+
+		npx sequelize db:seed:undo
+
+	Desfazer seed específico:
+
+		npx sequelize-cli db:seed:undo --seed nome-do-arquivo
