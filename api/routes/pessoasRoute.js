@@ -9,4 +9,9 @@ router.post('/pessoas', PessoaController.criaPessoa);
 router.put('/pessoas/:id', PessoaController.editaPessoa);
 router.delete('/pessoas/:id', PessoaController.deletaPessoa);
 
+router.get('/pessoas/:estudanteId/matriculas/:matriculaId', PessoaController.pegaUmaMatricula);
+router.post('/pessoas/:estudanteId/matriculas', PessoaController.criaMatricula);
+router.put('/pessoas/:estudanteId/matriculas/:matriculaId', PessoaController.editaMatricula);
+router.delete('/pessoas/:estudanteId/matriculas/:matriculaId', PessoaController.deletaMatricula);
+
 module.exports = router;

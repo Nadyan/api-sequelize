@@ -78,6 +78,79 @@ class PessoaController {
             return res.status(500).json(err.message);
         }
     }
+
+    static async pegaUmaMatricula(req, res) {
+        const { estudanteId, matriculaId } = req.params;
+
+        try {
+            const matricula = await database.Matriculas.findOne(
+                {
+                    where: {
+                        id: Number(matriculaId),
+                        estudante_id: Number(estudanteId)
+                    }
+                }
+            )
+
+            return res.status(200).json(matricula);
+        } catch (err) {
+            return res.status(500).json(err.message);
+        }
+    }
+
+    static async criaMatricula(req, res) {
+        const { estudanteId } = req.params;
+        const dadosMatricula = { ...req.body, estudanteId: Number(estudanteId) };
+
+        try {
+            const novaMatricula = await database.Matriculas.create(dadosMatricula);
+            return res.status(200).json(novaMatricula);
+        } catch (err) {
+            return res.status(500).json(err.message);
+        }
+    }
+
+    static async editaMatricula(req, res) {
+        const { estudanteId, matriculaId } = req.params;
+        const dados = req.body;
+
+        try {
+            const where = { 
+                where: { 
+                    id: Number(matriculaId),
+                    estudante_id: Number(estudanteId)
+                }
+            }
+            await database.Matriculas.update(dados, where);
+            // update() retorna apenas 0 ou 1, entao fazemos um
+            // findOne para retornar a matricula atualizada
+            const matriculaAtualizada = await database.Matriculas.findOne(where);
+
+            return res.status(200).json(matriculaAtualizada);
+        } catch (err) {
+            return res.status(500).json(err.message);
+        }
+    }
+
+    static async deletaMatricula(req, res) {
+        const { matriculaId } = req.params;
+
+        try {
+            const retorno = await database.Matriculas.destroy(
+                {
+                    where: {
+                        id: Number(matriculaId)
+                    }
+                }
+            );
+            
+            return res.status(200).json({
+                mensagem: `${retorno} - id ${matriculaId} deletada com sucesso`
+            });
+        } catch (err) {
+            return res.status(500).json(err.message);
+        }
+    }
 }
 
 module.exports = PessoaController;
