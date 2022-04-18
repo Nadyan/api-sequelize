@@ -22,9 +22,24 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Pessoas.init({
-    nome: DataTypes.STRING,
+    nome: { // validacao customizada pelo banco do tipo de dado nome
+      tupe: DataTypes.STRING,
+      validate: {
+        funcaoValidadora: function(dado) {
+          if (dado.length < 2) throw new Error('Campo nome deve ter ao menos 2 caracteres');
+        }
+      }
+    },
     ativo: DataTypes.BOOLEAN,
-    email: DataTypes.STRING,
+    email: { // validação pelo banco do tipo de dado email
+      type: DataTypes.STRING,
+      validate: {
+        isEmail: {
+          args: true,
+          msg: 'Dado do tipo email inválido'
+        }
+      }
+    },
     role: DataTypes.STRING
   }, {
     sequelize,
