@@ -1,4 +1,5 @@
 const database = require('../models');
+const Sequelize = require('sequelize');
 
 class PessoaController {
 
@@ -147,6 +148,36 @@ class PessoaController {
             return res.status(200).json({
                 mensagem: `${retorno} - id ${matriculaId} deletada com sucesso`
             });
+        } catch (err) {
+            return res.status(500).json(err.message);
+        }
+    }
+
+    static async desativaPessoa(req, res) {
+        const { estudanteId } = req.params;
+        
+        try {
+
+            database.sequelize.transaction(async transacao => {
+                await database.Pessoas.update(
+                    {ativo: false},
+                    {where: {estudante_id: Number(estudanteId)}},
+                    {transaction: transacao}
+                );
+    
+                await database.Matriculas.update(
+                    {status: 'cancelado'},
+                    {where: {estudante_id: Number(estudanteId)}},
+                    {transaction: transacao}
+                );
+            });
+
+            return res.status(200)
+                .json(
+                    {
+                        message: `Matrículas ref. ao estudante ${estudanteId} canceladas`
+                    }
+                );
         } catch (err) {
             return res.status(500).json(err.message);
         }
