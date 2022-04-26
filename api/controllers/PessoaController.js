@@ -1,16 +1,17 @@
 const database = require('../models');
 const Sequelize = require('sequelize');
 
-const Services = require('../services/Services');
-const pessoasServices = new Services('Pessoas');
+const { PessoasServices } = require('../services');
+const pessoasServices = new PessoasServices();
 
 class PessoaController {
 
     static async selecionaTudo(req, res) {
         try {
-            const todasPessoas = await database.Pessoas.findAll();
-            // OU utilizando serviços:
-            // const todasPessoas = await pessoasServices.pegaTodosOsRegistros();
+            //const todasPessoas = await database.Pessoas.findAll();
+            
+            // OU utilizando Services:
+            const todasPessoas = await pessoasServices.pegaTodosOsRegistros();
             return res.status(200).json(todasPessoas);
         } catch (err) {
             return res.status(500).json(err.message);
@@ -20,13 +21,16 @@ class PessoaController {
     static async selecionaPessoa(req, res) {
         const { id } = req.params;
         try {
-            const dados = await database.Pessoas.findOne(
-                { 
-                    where: { 
-                        id: Number(id)
-                    }
-                }
-            );
+            //const dados = await database.Pessoas.findOne(
+            //    { 
+            //        where: { 
+            //            id: Number(id)
+            //        }
+            //    }
+            //);
+            
+            // OU utilizando services:
+            const dados = await pessoasServices.pegaUmRegistro(id);
             return res.status(200).json(dados);
         } catch (err) {
             return res.status(500).json(err.message);
@@ -37,7 +41,10 @@ class PessoaController {
         const dados = req.body;
 
         try {
-            const { id } = await database.Pessoas.create(dados);
+            //const { id } = await database.Pessoas.create(dados);
+            
+            // OU utilizando services:
+            const { id } = await pessoasServices.criaRegistro(dados);
             return res.status(200).json(id);
         } catch (err) {
             return res.status(500).json(err.message);
@@ -49,16 +56,18 @@ class PessoaController {
         const dados = req.body;
 
         try {
-            const where = { 
-                where: { 
-                    id: Number(id)
-                }
-            }
-            await database.Pessoas.update(dados, where);
+            //const where = { 
+            //    where: { 
+            //        id: Number(id)
+            //    }
+            //}
+            //await database.Pessoas.update(dados, where);
             // update() retorna apenas 0 ou 1, entao fazemos um
             // findOne para retornar a pessoa atualizada
-            const pessoaAtualizada = await database.Pessoas.findOne(where);
+            //const pessoaAtualizada = await database.Pessoas.findOne(where);
 
+            // OU utilizando services:
+            const pessoaAtualizada = await pessoasServices.atualizaRegistro(id, dados);
             return res.status(200).json(pessoaAtualizada);
         } catch (err) {
             return res.status(500).json(err.message);
@@ -68,18 +77,21 @@ class PessoaController {
     static async deletaPessoa(req, res) {
         const { id } = req.params;
 
-        try {
-            const retorno = await database.Pessoas.destroy(
-                {
-                    where: {
-                        id: Number(id)
-                    }
-                }
-            );
-            
-            return res.status(200).json({
-                mensagem: `${retorno} - id ${id} deletado com sucesso`
-            });
+        try { 
+            //const retorno = await database.Pessoas.destroy(
+            //    {
+            //        where: {
+            //            id: Number(id)
+            //        }
+            //    }
+            //);
+            //
+            //return res.status(200).json({
+            //    mensagem: `${retorno} - id ${id} deletado com sucesso`
+            //});
+
+            // OU utilizando services:
+            return pessoasServices.deletaRegistro(id);
         } catch (err) {
             return res.status(500).json(err.message);
         }
