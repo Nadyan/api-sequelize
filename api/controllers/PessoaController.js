@@ -1,11 +1,16 @@
 const database = require('../models');
 const Sequelize = require('sequelize');
 
+const Services = require('../services/Services');
+const pessoasServices = new Services('Pessoas');
+
 class PessoaController {
 
     static async selecionaTudo(req, res) {
         try {
             const todasPessoas = await database.Pessoas.findAll();
+            // OU utilizando serviços:
+            // const todasPessoas = await pessoasServices.pegaTodosOsRegistros();
             return res.status(200).json(todasPessoas);
         } catch (err) {
             return res.status(500).json(err.message);
